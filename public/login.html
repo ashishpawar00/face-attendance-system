@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Login to FaceAttend Admin Panel">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>Login - FaceAttend</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .login-container {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 1.5rem; position: relative; z-index: 1;
+    }
+    .login-card {
+      width: 100%; max-width: 420px;
+      background: var(--bg-card); backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass); border-radius: var(--radius);
+      padding: 2.5rem; animation: fadeInUp 0.6s ease;
+    }
+    .login-logo {
+      text-align: center; margin-bottom: 2rem;
+    }
+    .login-logo .logo-icon {
+      width: 64px; height: 64px; margin: 0 auto 1rem;
+      background: var(--gradient-primary); border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; box-shadow: 0 8px 30px var(--accent-glow);
+    }
+    .login-logo h1 {
+      font-size: 1.5rem; font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .login-logo p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; }
+    .login-error {
+      display: none; background: var(--danger-glow); color: var(--danger);
+      padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem;
+      margin-bottom: 1rem; text-align: center;
+    }
+    .login-error.visible { display: block; animation: fadeIn 0.3s; }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-icon">🎓</div>
+        <h1>FaceAttend</h1>
+        <p>Admin Login</p>
+      </div>
+
+      <div class="login-error" id="loginError"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" class="form-control" placeholder="Enter username" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" id="loginBtn" style="width:100%;margin-top:1rem;">
+          🔐 Login
+        </button>
+      </form>
+
+      <p style="text-align:center;margin-top:1.5rem;font-size:0.78rem;color:var(--text-muted);">
+        Default: admin / admin123
+      </p>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/auth-helper.js"></script>
+  <script>
+    // If already logged in, redirect
+    if (isLoggedIn()) window.location.href = '/';
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const errDiv = document.getElementById('loginError');
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      btn.disabled = true; btn.textContent = '⏳ Logging in...';
+      errDiv.classList.remove('visible');
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          setToken(data.token);
+          window.location.href = '/';
+        } else {
+          errDiv.textContent = data.error || 'Login failed';
+          errDiv.classList.add('visible');
+        }
+      } catch (err) {
+        errDiv.textContent = 'Connection error. Is the server running?';
+        errDiv.classList.add('visible');
+      }
+
+      btn.disabled = false; btn.textContent = '🔐 Login';
+    });
+  </script>
+</body>
+</html>

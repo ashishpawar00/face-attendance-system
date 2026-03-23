@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Take attendance automatically using AI face recognition">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>Take Attendance - FaceAttend</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">🎓</div>
+        <span>FaceAttend</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">📊 <span class="nav-text">Dashboard</span></a></li>
+        <li><a href="/register.html">📝 <span class="nav-text">Register</span></a></li>
+        <li><a href="/attendance.html" class="active">📸 <span class="nav-text">Attendance</span></a></li>
+        <li><a href="/records.html">📋 <span class="nav-text">Records</span></a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/">📊 Dashboard</a>
+    <a href="/register.html">📝 Register Student</a>
+    <a href="/attendance.html" class="active">📸 Take Attendance</a>
+    <a href="/records.html">📋 View Records</a>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Take Attendance</h1>
+      <p>Scan faces to automatically mark attendance</p>
+    </div>
+
+    <div class="grid-2">
+      <!-- Left: Camera -->
+      <div>
+        <div class="card">
+          <div class="flex items-center justify-between" style="margin-bottom:1rem;">
+            <h2 style="font-size:1.1rem;">📸 Camera Feed</h2>
+            <span class="badge badge-warning" id="scanStatus">Initializing...</span>
+          </div>
+
+          <div class="webcam-container" id="webcamContainer">
+            <video id="video" autoplay playsinline muted></video>
+            <canvas id="overlay"></canvas>
+            <div class="scan-line"></div>
+            <!-- Face guide -->
+            <div class="face-guide" id="faceGuide">
+              <div class="corner tl"></div>
+              <div class="corner tr"></div>
+              <div class="corner bl"></div>
+              <div class="corner br"></div>
+            </div>
+            <div class="webcam-overlay" id="webcamLoading">
+              <div class="loader"></div>
+            </div>
+          </div>
+
+          <!-- Camera controls -->
+          <div class="camera-controls">
+            <select id="cameraSelect" class="form-control" style="font-size:0.85rem;">
+              <option value="">📷 Loading cameras...</option>
+            </select>
+            <button class="btn-icon" id="flipCameraBtn" title="Switch Camera" type="button">🔄</button>
+          </div>
+
+          <div style="display:flex;gap:0.75rem;margin-top:0.75rem;justify-content:center;">
+            <button class="btn btn-success" id="startBtn" disabled>▶ Start Scanning</button>
+            <button class="btn btn-danger" id="stopBtn" style="display:none;">⏹ Stop</button>
+          </div>
+
+          <p id="faceInfo" class="text-center mt-1" style="font-size:0.85rem;color:var(--text-secondary);">
+            Loading face detection models...
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: Results + Summary -->
+      <div>
+        <div class="card">
+          <div class="flex items-center justify-between" style="margin-bottom:1rem;">
+            <h2 style="font-size:1.1rem;">✅ Recognized</h2>
+            <span class="badge badge-success" id="recognizedCount">0 Marked</span>
+          </div>
+          <div class="recognition-results" id="recognitionResults">
+            <div class="empty-state" style="padding:2rem 1rem;">
+              <div class="empty-icon">🔍</div>
+              <h3>No faces detected yet</h3>
+              <p>Start scanning to recognize students</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-2">
+          <h2 style="margin-bottom:1rem;font-size:1.1rem;">📊 Today's Summary</h2>
+          <div class="stats-grid" style="grid-template-columns:1fr 1fr;">
+            <div style="text-align:center;">
+              <div style="font-size:1.75rem;font-weight:800;color:var(--success);" id="summaryPresent">0</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);">Present</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:1.75rem;font-weight:800;color:var(--danger);" id="summaryAbsent">0</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);">Absent</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <a href="/"><span class="nav-icon">📊</span>Dashboard</a>
+      <a href="/register.html"><span class="nav-icon">📝</span>Register</a>
+      <a href="/attendance.html" class="active"><span class="nav-icon">📸</span>Attend</a>
+      <a href="/records.html"><span class="nav-icon">📋</span>Records</a>
+    </div>
+  </nav>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
+  <script src="/js/attendance.js"></script>
+  <script>
+    document.getElementById('hamburger').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

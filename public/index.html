@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="FaceAttend — AI Face Recognition Attendance Dashboard">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>Dashboard - FaceAttend</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">🎓</div>
+        <span>FaceAttend</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/" class="active">📊 <span class="nav-text">Dashboard</span></a></li>
+        <li><a href="/register.html">📝 <span class="nav-text">Register</span></a></li>
+        <li><a href="/attendance.html">📸 <span class="nav-text">Attendance</span></a></li>
+        <li><a href="/records.html">📋 <span class="nav-text">Records</span></a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile slide menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" class="active">📊 Dashboard</a>
+    <a href="/register.html">📝 Register Student</a>
+    <a href="/attendance.html">📸 Take Attendance</a>
+    <a href="/records.html">📋 View Records</a>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p>Overview of your attendance system</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon purple">👥</div>
+        <div class="stat-value" id="totalStudents">0</div>
+        <div class="stat-label">Total Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div class="stat-value" id="todayPresent">0</div>
+        <div class="stat-label">Present Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange">❌</div>
+        <div class="stat-value" id="todayAbsent">0</div>
+        <div class="stat-label">Absent Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">📈</div>
+        <div class="stat-value" id="percentage">0%</div>
+        <div class="stat-label">Attendance Rate</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card mb-1">
+      <h2 style="margin-bottom: 1rem; font-size: 1.1rem;">⚡ Quick Actions</h2>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;">
+        <a href="/register.html" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">📝 Register New Student</a>
+        <a href="/attendance.html" class="btn btn-success btn-lg" style="width:100%;justify-content:center;">📸 Take Attendance</a>
+        <a href="/records.html" class="btn btn-outline btn-lg" style="width:100%;justify-content:center;">📋 View Records</a>
+      </div>
+    </div>
+
+    <div class="grid-2 mt-3">
+      <!-- Today's Attendance -->
+      <div class="card">
+        <div class="flex items-center justify-between" style="margin-bottom:1rem;">
+          <h2 style="font-size:1.1rem;">📋 Today's Attendance</h2>
+          <span class="badge badge-success" id="todayBadge">0 Present</span>
+        </div>
+        <div id="todayLog">
+          <div class="empty-state" style="padding:2rem 1rem;">
+            <div class="empty-icon">📭</div>
+            <h3>No attendance yet</h3>
+            <p>Start by taking attendance from the camera</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registered Students -->
+      <div class="card">
+        <div class="flex items-center justify-between" style="margin-bottom:1rem;">
+          <h2 style="font-size:1.1rem;">👥 Registered Students</h2>
+          <a href="/register.html" class="btn btn-outline btn-sm">+ Add New</a>
+        </div>
+        <div id="studentsPreview">
+          <div class="empty-state" style="padding:2rem 1rem;">
+            <div class="empty-icon">📚</div>
+            <h3>No students registered</h3>
+            <p>Register students to start using face recognition</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav (mobile) -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <a href="/" class="active"><span class="nav-icon">📊</span>Dashboard</a>
+      <a href="/register.html"><span class="nav-icon">📝</span>Register</a>
+      <a href="/attendance.html"><span class="nav-icon">📸</span>Attend</a>
+      <a href="/records.html"><span class="nav-icon">📋</span>Records</a>
+    </div>
+  </nav>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/dashboard.js"></script>
+  <script>
+    // Hamburger toggle
+    document.getElementById('hamburger').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
