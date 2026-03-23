@@ -2,6 +2,12 @@
 //  register.js — Camera Fix + Phase 2 Multi-Sample
 // ═══════════════════════════════════════════
 
+// authFetch is provided by auth-helper.js loaded before this script
+// Falls back to plain fetch if auth-helper not loaded yet
+function apiFetch(url, options = {}) {
+  return typeof authFetch === 'function' ? authFetch(url, options) : fetch(url, options);
+}
+
 function showToast(msg, type = 'info') {
   const c = document.getElementById('toastContainer'); if (!c) return;
   const t = document.createElement('div');
@@ -427,7 +433,7 @@ async function handleRegistration(e) {
     fd.append('face_descriptor', JSON.stringify(currentFaceDescriptor));
     if (capturedBlob) fd.append('photo', capturedBlob, 'photo.jpg');
 
-    const res = await fetch('/api/students', { method: 'POST', body: fd });
+    const res = await apiFetch('/api/students', { method: 'POST', body: fd });
     const data = await res.json();
     if (res.ok) {
       showToast(`✅ ${name} registered!`, 'success');
@@ -445,7 +451,7 @@ async function handleRegistration(e) {
 // ═════ Students List =════
 async function loadStudents() {
   try {
-    const res = await fetch('/api/students');
+    const res = await apiFetch('/api/students');
     const students = await res.json();
     const container = document.getElementById('studentsList');
     const badge = document.getElementById('studentCount');
@@ -470,7 +476,7 @@ async function loadStudents() {
 async function deleteStudent(id, name) {
   if (!confirm(`Delete ${name}?`)) return;
   try {
-    const res = await fetch(`/api/students/${id}`, { method: 'DELETE' });
+    const res = await apiFetch(`/api/students/${id}`, { method: 'DELETE' });
     if (res.ok) { showToast(`${name} deleted`, 'success'); loadStudents(); }
     else showToast('Delete failed', 'error');
   } catch (e) { showToast('Delete failed', 'error'); }

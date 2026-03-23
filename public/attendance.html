@@ -22,9 +22,12 @@
         <li><a href="/attendance.html" class="active">📸 <span class="nav-text">Attendance</span></a></li>
         <li><a href="/records.html">📋 <span class="nav-text">Records</span></a></li>
       </ul>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <button class="btn btn-outline btn-sm" id="logoutBtn">🚪 Logout</button>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </nav>
 
@@ -130,12 +133,16 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
+  <script src="/js/auth-helper.js"></script>
   <script src="/js/attendance.js"></script>
   <script>
+    requireAuth();
     document.getElementById('hamburger').addEventListener('click', function() {
       this.classList.toggle('open');
       document.getElementById('mobileMenu').classList.toggle('open');
     });
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', logout);
   </script>
 </body>
 </html>

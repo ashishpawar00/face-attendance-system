@@ -47,9 +47,17 @@ async function requireAuth() {
 async function authFetch(url, options = {}) {
   const token = getToken();
   if (!options.headers) options.headers = {};
-  if (token && !options.headers['Authorization']) {
+
+  // Add Authorization header if we have a token
+  if (token) {
     options.headers['Authorization'] = 'Bearer ' + token;
   }
+
+  // IMPORTANT: Do NOT set Content-Type for FormData — browser sets it with boundary automatically
+  if (options.body instanceof FormData) {
+    delete options.headers['Content-Type'];
+  }
+
   const res = await fetch(url, options);
   if (res.status === 401) {
     clearToken();

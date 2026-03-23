@@ -2,6 +2,10 @@
 //  dashboard.js — Phase 1
 // ═══════════════════════════════════════════
 
+function apiFetch(url, options = {}) {
+  return typeof authFetch === 'function' ? authFetch(url, options) : fetch(url, options);
+}
+
 function showToast(msg, type = 'info') {
   const c = document.getElementById('toastContainer'); if (!c) return;
   const t = document.createElement('div');
@@ -15,9 +19,9 @@ function showToast(msg, type = 'info') {
 async function loadDashboard() {
   try {
     const [statsRes, todayRes, studentsRes] = await Promise.all([
-      fetch('/api/attendance/stats'),
-      fetch('/api/attendance'),
-      fetch('/api/students')
+      apiFetch('/api/attendance/stats'),
+      apiFetch('/api/attendance'),
+      apiFetch('/api/students')
     ]);
 
     const stats = await statsRes.json();

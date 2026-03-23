@@ -2,6 +2,10 @@
 //  records.js — Phase 1
 // ═══════════════════════════════════════════
 
+function apiFetch(url, options = {}) {
+  return typeof authFetch === 'function' ? authFetch(url, options) : fetch(url, options);
+}
+
 function showToast(msg, type = 'info') {
   const c = document.getElementById('toastContainer'); if (!c) return;
   const t = document.createElement('div');
@@ -35,7 +39,7 @@ async function loadRecords() {
   document.getElementById('selectedDate').textContent = date;
 
   try {
-    const res = await fetch(`/api/attendance?date=${date}`);
+    const res = await apiFetch(`/api/attendance?date=${date}`);
     const data = await res.json();
 
     currentRecords = data.records || [];

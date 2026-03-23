@@ -2,6 +2,10 @@
 //  attendance.js — Camera Fix + Phase 5 Liveness
 // ═══════════════════════════════════════════
 
+function apiFetch(url, options = {}) {
+  return typeof authFetch === 'function' ? authFetch(url, options) : fetch(url, options);
+}
+
 function showToast(msg, type = 'info') {
   const c = document.getElementById('toastContainer'); if (!c) return;
   const t = document.createElement('div');
@@ -179,7 +183,7 @@ function stopStream() {
 // ═════ Load Descriptors ═════
 async function loadDescriptors() {
   try {
-    const res = await fetch('/api/students/descriptors/all');
+    const res = await apiFetch('/api/students/descriptors/all');
     const students = await res.json();
     storedDescriptors = students.map(s => ({
       id: s._id, name: s.name, rollNumber: s.roll_number,
@@ -337,7 +341,7 @@ function findBestMatch(query) {
 // ═════ Mark Attendance ═════
 async function markAttendance(match) {
   try {
-    const res = await fetch('/api/attendance', {
+    const res = await apiFetch('/api/attendance', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ student_id: match.id, confidence: match.confidence })
     });
@@ -375,7 +379,7 @@ function addRecognitionCard(match, data) {
 
 async function updateSummary() {
   try {
-    const res = await fetch('/api/attendance/stats');
+    const res = await apiFetch('/api/attendance/stats');
     const stats = await res.json();
     const p = document.getElementById('summaryPresent');
     const a = document.getElementById('summaryAbsent');
