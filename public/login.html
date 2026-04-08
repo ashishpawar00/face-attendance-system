@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Login to FaceAttend Admin Panel">
+  <meta name="description" content="Login to FaceAttend — Oriental College of Technology, Bhopal">
   <meta name="theme-color" content="#0a0e1a">
-  <title>Login - FaceAttend</title>
+  <title>Login - FaceAttend | OCT Bhopal</title>
   <link rel="stylesheet" href="/css/style.css">
   <style>
     .login-container {
@@ -13,7 +13,7 @@
       min-height: 100vh; padding: 1.5rem; position: relative; z-index: 1;
     }
     .login-card {
-      width: 100%; max-width: 420px;
+      width: 100%; max-width: 440px;
       background: var(--bg-card); backdrop-filter: blur(20px);
       border: 1px solid var(--border-glass); border-radius: var(--radius);
       padding: 2.5rem; animation: fadeInUp 0.6s ease;
@@ -22,23 +22,36 @@
       text-align: center; margin-bottom: 2rem;
     }
     .login-logo .logo-icon {
-      width: 64px; height: 64px; margin: 0 auto 1rem;
+      width: 72px; height: 72px; margin: 0 auto 1rem;
       background: var(--gradient-primary); border-radius: var(--radius);
       display: flex; align-items: center; justify-content: center;
-      font-size: 2rem; box-shadow: 0 8px 30px var(--accent-glow);
+      font-size: 2.2rem; box-shadow: 0 8px 30px var(--accent-glow);
     }
     .login-logo h1 {
-      font-size: 1.5rem; font-weight: 800;
+      font-size: 1.6rem; font-weight: 800;
       background: var(--gradient-primary);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .login-logo p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; }
+    .login-logo .college-name {
+      color: var(--text-secondary); font-size: 0.82rem; margin-top: 0.5rem;
+      font-weight: 500; letter-spacing: 0.02em;
+    }
+    .login-logo .college-sub {
+      color: var(--text-muted); font-size: 0.72rem; margin-top: 0.2rem;
+    }
     .login-error {
       display: none; background: var(--danger-glow); color: var(--danger);
       padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem;
       margin-bottom: 1rem; text-align: center;
     }
     .login-error.visible { display: block; animation: fadeIn 0.3s; }
+    .login-footer {
+      text-align: center; margin-top: 2rem; padding-top: 1.5rem;
+      border-top: 1px solid var(--border-glass);
+    }
+    .login-footer p {
+      color: var(--text-muted); font-size: 0.7rem; line-height: 1.5;
+    }
   </style>
 </head>
 <body>
@@ -47,7 +60,8 @@
       <div class="login-logo">
         <div class="logo-icon">🎓</div>
         <h1>FaceAttend</h1>
-        <p>Admin Login</p>
+        <p class="college-name">Oriental College of Technology, Bhopal</p>
+        <p class="college-sub">AI-Powered Attendance System</p>
       </div>
 
       <div class="login-error" id="loginError"></div>
@@ -66,9 +80,9 @@
         </button>
       </form>
 
-      <p style="text-align:center;margin-top:1.5rem;font-size:0.78rem;color:var(--text-muted);">
-        Default: admin / admin123
-      </p>
+      <div class="login-footer">
+        <p>© 2024 Oriental College of Technology, Bhopal<br>Developed with ❤️ for smarter attendance</p>
+      </div>
     </div>
   </div>
 
@@ -76,7 +90,6 @@
 
   <script src="/js/auth-helper.js"></script>
   <script>
-    // If already logged in, redirect
     if (isLoggedIn()) window.location.href = '/';
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
