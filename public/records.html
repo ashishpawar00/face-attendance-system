@@ -7,6 +7,9 @@
   <meta name="theme-color" content="#0a0e1a">
   <title>Attendance Records - FaceAttend</title>
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -65,8 +68,14 @@
             <option value="Biotechnology">Biotechnology</option>
           </select>
         </div>
-        <div style="display:flex;gap:0.5rem;align-self:flex-end;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="searchInput" style="font-size:0.75rem;">🔍 Search</label>
+          <input type="text" id="searchInput" class="form-control" placeholder="Name or Roll No...">
+        </div>
+        <div style="display:flex;gap:0.5rem;align-self:flex-end;flex-wrap:wrap;">
           <button class="btn btn-primary btn-sm" id="exportCSV">📥 CSV</button>
+          <button class="btn btn-danger btn-sm" id="exportPDF" style="background:linear-gradient(135deg,#ef4444,#dc2626);">📄 PDF</button>
+          <button class="btn btn-success btn-sm" id="exportExcel">📊 Excel</button>
         </div>
       </div>
     </div>

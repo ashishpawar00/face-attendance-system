@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#0a0e1a">
   <title>Dashboard - FaceAttend</title>
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -77,6 +78,17 @@
         <a href="/register.html" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">📝 Register New Student</a>
         <a href="/attendance.html" class="btn btn-success btn-lg" style="width:100%;justify-content:center;">📸 Take Attendance</a>
         <a href="/records.html" class="btn btn-outline btn-lg" style="width:100%;justify-content:center;">📋 View Records</a>
+      </div>
+    </div>
+
+    <!-- Weekly Attendance Chart -->
+    <div class="card mt-2">
+      <div class="flex items-center justify-between" style="margin-bottom:1rem;">
+        <h2 style="font-size:1.1rem;">📈 Weekly Attendance Trend</h2>
+        <span class="badge badge-primary" id="trendBadge">Last 7 Days</span>
+      </div>
+      <div style="position:relative;height:280px;width:100%;">
+        <canvas id="weeklyChart"></canvas>
       </div>
     </div>
 
