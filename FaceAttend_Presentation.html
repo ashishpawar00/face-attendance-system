@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FaceAttend — College Presentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0a0e1a; color: #f1f5f9; overflow: hidden; }
+
+    /* Slide System */
+    .slide { display: none; width: 100vw; height: 100vh; padding: 60px 80px; position: relative; flex-direction: column; justify-content: center; }
+    .slide.active { display: flex; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Backgrounds */
+    .slide::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; }
+    .slide > * { position: relative; z-index: 1; }
+    .bg-gradient::before { background: linear-gradient(135deg, #0a0e1a 0%, #1e1b4b 50%, #0a0e1a 100%); }
+    .bg-dark::before { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+    .bg-accent::before { background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6366f1 100%); }
+
+    /* Decorative circles */
+    .slide::after { content: ''; position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%); top: -100px; right: -100px; z-index: 0; }
+
+    /* Typography */
+    h1 { font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 1rem; }
+    h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1.5rem; }
+    h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; color: #a5b4fc; }
+    p { font-size: 1.2rem; color: #94a3b8; line-height: 1.7; }
+    .gradient-text { background: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .green-text { color: #10b981; }
+    .small { font-size: 0.9rem; color: #64748b; }
+
+    /* Slide Number */
+    .slide-number { position: absolute; bottom: 30px; right: 40px; font-size: 0.85rem; color: #475569; }
+    .college-footer { position: absolute; bottom: 30px; left: 40px; font-size: 0.8rem; color: #475569; }
+
+    /* Lists */
+    ul { list-style: none; }
+    ul li { padding: 12px 0; font-size: 1.15rem; display: flex; align-items: flex-start; gap: 12px; }
+    ul li::before { content: ''; }
+    .icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* Grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
+
+    /* Cards */
+    .card { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(99, 102, 241, 0.15); border-radius: 16px; padding: 28px; }
+    .card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .card p { font-size: 0.95rem; }
+    .card-icon { font-size: 2rem; margin-bottom: 12px; }
+
+    /* Tech Badge */
+    .badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin: 4px; }
+    .badge-purple { background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+    .badge-green { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+    .badge-orange { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .badge-red { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+
+    /* Flow Diagram */
+    .flow { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; margin: 2rem 0; }
+    .flow-item { background: rgba(30,41,59,0.8); border: 1px solid rgba(99,102,241,0.2); border-radius: 12px; padding: 18px 24px; text-align: center; min-width: 140px; }
+    .flow-item .icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+    .flow-arrow { font-size: 1.5rem; color: #6366f1; }
+
+    /* Navigation hint */
+    .nav-hint { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: rgba(30,41,59,0.8); padding: 8px 20px; border-radius: 20px; font-size: 0.75rem; color: #64748b; border: 1px solid rgba(99,102,241,0.1); z-index: 100; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th { background: rgba(99,102,241,0.15); color: #a5b4fc; padding: 12px 16px; text-align: left; font-size: 0.9rem; }
+    td { padding: 10px 16px; border-bottom: 1px solid rgba(148,163,184,0.1); font-size: 0.9rem; color: #cbd5e1; }
+  </style>
+</head>
+<body>
+
+<!-- ==================== SLIDE 1: Title ==================== -->
+<div class="slide bg-gradient active" id="slide1">
+  <div style="text-align:center;">
+    <div style="font-size:4rem;margin-bottom:1rem;">🎓</div>
+    <h1><span class="gradient-text">FaceAttend</span></h1>
+    <p style="font-size:1.5rem;color:#cbd5e1;margin:1rem 0;">AI-Powered Face Recognition Attendance System</p>
+    <div style="margin-top:2rem;">
+      <p style="font-size:1.1rem;color:#94a3b8;">Oriental College of Technology, Bhopal</p>
+      <p style="font-size:0.9rem;color:#64748b;margin-top:0.5rem;">Department of Computer Science & Engineering</p>
+    </div>
+    <div style="margin-top:3rem;">
+      <p style="font-size:0.95rem;color:#64748b;">Presented by: <strong style="color:#f1f5f9;">Ashish Pawar</strong></p>
+    </div>
+  </div>
+  <span class="slide-number">1 / 12</span>
+</div>
+
+<!-- ==================== SLIDE 2: Problem ==================== -->
+<div class="slide bg-dark" id="slide2">
+  <h3>❓ The Problem</h3>
+  <h2>Why Traditional Attendance <span class="gradient-text">Fails</span></h2>
+  <div class="grid-3" style="margin-top:2rem;">
+    <div class="card">
+      <div class="card-icon">⏰</div>
+      <h3>Time Consuming</h3>
+      <p>Manual roll calls waste 5-10 minutes every lecture across every class</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🤥</div>
+      <h3>Proxy Attendance</h3>
+      <p>Students can easily mark attendance for absent friends</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📝</div>
+      <h3>Paper Records</h3>
+      <p>Hard to analyze, easy to lose, difficult to generate reports</p>
+    </div>
+  </div>
+  <span class="slide-number">2 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 3: Solution ==================== -->
+<div class="slide bg-gradient" id="slide3">
+  <h3>💡 Our Solution</h3>
+  <h2><span class="gradient-text">FaceAttend</span> — Smart Attendance</h2>
+  <div class="grid-2" style="margin-top:2rem;">
+    <div>
+      <ul>
+        <li><span class="icon">📸</span> Look at the camera → Attendance marked automatically</li>
+        <li><span class="icon">🛡️</span> Liveness detection prevents photo spoofing</li>
+        <li><span class="icon">📱</span> Works on mobile phones too (front & rear camera)</li>
+        <li><span class="icon">📊</span> Real-time dashboard with charts & analytics</li>
+        <li><span class="icon">📄</span> Export reports in PDF, Excel & CSV</li>
+      </ul>
+    </div>
+    <div class="card" style="display:flex;align-items:center;justify-content:center;text-align:center;">
+      <div>
+        <div style="font-size:4rem;margin-bottom:1rem;">🧠</div>
+        <h3 style="color:#f1f5f9;">AI-Powered</h3>
+        <p>Uses TensorFlow.js for real-time face detection and recognition directly in the browser</p>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">3 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 4: Tech Stack ==================== -->
+<div class="slide bg-dark" id="slide4">
+  <h3>🔧 Technology Stack</h3>
+  <h2>Built with <span class="gradient-text">Modern Technologies</span></h2>
+  <div class="grid-2" style="margin-top:2rem;">
+    <div class="card">
+      <h3>🖥️ Frontend</h3>
+      <div style="margin-top:1rem;">
+        <span class="badge badge-purple">HTML5</span>
+        <span class="badge badge-purple">CSS3</span>
+        <span class="badge badge-purple">JavaScript</span>
+        <span class="badge badge-purple">Chart.js</span>
+        <span class="badge badge-purple">jsPDF</span>
+        <span class="badge badge-purple">SheetJS</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>⚙️ Backend</h3>
+      <div style="margin-top:1rem;">
+        <span class="badge badge-green">Node.js</span>
+        <span class="badge badge-green">Express.js</span>
+        <span class="badge badge-green">JWT Auth</span>
+        <span class="badge badge-green">bcrypt</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🗄️ Database & Cloud</h3>
+      <div style="margin-top:1rem;">
+        <span class="badge badge-orange">MongoDB Atlas</span>
+        <span class="badge badge-orange">Cloudinary</span>
+        <span class="badge badge-orange">Mongoose ODM</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🧠 AI / ML</h3>
+      <div style="margin-top:1rem;">
+        <span class="badge badge-red">face-api.js</span>
+        <span class="badge badge-red">TensorFlow.js</span>
+        <span class="badge badge-red">Tiny Face Detector</span>
+        <span class="badge badge-red">68-Point Landmarks</span>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">4 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 5: Architecture ==================== -->
+<div class="slide bg-gradient" id="slide5">
+  <h3>🏗️ System Architecture</h3>
+  <h2>How It <span class="gradient-text">Works</span></h2>
+  <div class="flow" style="margin-top:3rem;">
+    <div class="flow-item">
+      <span class="icon">📸</span>
+      <strong>Camera</strong>
+      <p class="small">Capture face</p>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-item">
+      <span class="icon">🧠</span>
+      <strong>face-api.js</strong>
+      <p class="small">Detect & encode</p>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-item">
+      <span class="icon">🔍</span>
+      <strong>Match</strong>
+      <p class="small">Compare descriptors</p>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-item">
+      <span class="icon">✅</span>
+      <strong>Mark</strong>
+      <p class="small">Save to MongoDB</p>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-item">
+      <span class="icon">📊</span>
+      <strong>Dashboard</strong>
+      <p class="small">View analytics</p>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2rem;">
+    <p>Face descriptors are 128-dimensional vectors compared using <strong style="color:#a5b4fc;">Euclidean Distance</strong> (threshold: 0.5)</p>
+  </div>
+  <span class="slide-number">5 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 6: Registration ==================== -->
+<div class="slide bg-dark" id="slide6">
+  <h3>📝 Module 1</h3>
+  <h2>Student <span class="gradient-text">Registration</span></h2>
+  <div class="grid-2" style="margin-top:2rem;">
+    <div>
+      <ul>
+        <li><span class="icon">👤</span> Enter name, roll number & department</li>
+        <li><span class="icon">📷</span> Camera captures <strong style="color:#a5b4fc;">5 face samples</strong></li>
+        <li><span class="icon">🔍</span> Blur detection rejects low-quality images</li>
+        <li><span class="icon">🧮</span> 5 descriptors are <strong style="color:#a5b4fc;">averaged</strong> for accuracy</li>
+        <li><span class="icon">☁️</span> Photo uploaded to Cloudinary</li>
+        <li><span class="icon">🗄️</span> Data stored in MongoDB Atlas</li>
+      </ul>
+    </div>
+    <div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+      <div style="font-size:3rem;margin-bottom:1rem;">📸 → 🧠 → 💾</div>
+      <h3 style="color:#10b981;">Multi-Sample Capture</h3>
+      <p>5 samples with different micro-angles create a robust face profile that works even with slight head movements</p>
+    </div>
+  </div>
+  <span class="slide-number">6 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 7: Attendance ==================== -->
+<div class="slide bg-gradient" id="slide7">
+  <h3>📸 Module 2</h3>
+  <h2>Attendance <span class="gradient-text">Scanning</span></h2>
+  <div class="grid-2" style="margin-top:2rem;">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🟢</div>
+      <h3 style="color:#10b981;">Recognized</h3>
+      <p>Green box + name + confidence % shown on screen. Attendance auto-marked.</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🟡</div>
+      <h3 style="color:#f59e0b;">Liveness Check</h3>
+      <p>Orange box = face matched but user must <strong>move slightly</strong> to confirm they're real (not a photo).</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>🛡️ Liveness Detection (Anti-Spoofing)</h3>
+    <p>Tracks <strong style="color:#a5b4fc;">nose-tip landmark movement</strong> across 3+ frames. Static photos have zero movement and get rejected.</p>
+  </div>
+  <span class="slide-number">7 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 8: Dashboard ==================== -->
+<div class="slide bg-dark" id="slide8">
+  <h3>📊 Module 3</h3>
+  <h2>Dashboard & <span class="gradient-text">Analytics</span></h2>
+  <div class="grid-4" style="margin-top:2rem;">
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">👥</div>
+      <h3>Total Students</h3>
+      <p>Live count</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">✅</div>
+      <h3>Present Today</h3>
+      <p>Real-time</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">❌</div>
+      <h3>Absent Today</h3>
+      <p>Auto-calculated</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">📈</div>
+      <h3>Attendance %</h3>
+      <p>Daily rate</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1.5rem;text-align:center;">
+    <h3>📈 Weekly Attendance Chart (Chart.js)</h3>
+    <p>Gradient-filled line chart showing Present vs Absent over 7 days with animated counters and dark theme styling</p>
+  </div>
+  <span class="slide-number">8 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 9: Records & Export ==================== -->
+<div class="slide bg-gradient" id="slide9">
+  <h3>📋 Module 4</h3>
+  <h2>Records & <span class="gradient-text">Export</span></h2>
+  <div class="grid-3" style="margin-top:2rem;">
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">📥</div>
+      <h3>CSV Export</h3>
+      <p>Comma-separated values for spreadsheets</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">📄</div>
+      <h3>PDF Export</h3>
+      <p>Professional report with header, table & footer (jsPDF)</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">📊</div>
+      <h3>Excel Export</h3>
+      <p>.xlsx file with column widths (SheetJS)</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>🔍 Smart Filters</h3>
+    <p>Filter by <strong style="color:#a5b4fc;">date</strong>, <strong style="color:#a5b4fc;">department</strong>, and search by <strong style="color:#a5b4fc;">student name or roll number</strong> — all in real-time</p>
+  </div>
+  <span class="slide-number">9 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 10: Security ==================== -->
+<div class="slide bg-dark" id="slide10">
+  <h3>🔐 Module 5</h3>
+  <h2>Security & <span class="gradient-text">Authentication</span></h2>
+  <div class="grid-2" style="margin-top:2rem;">
+    <div>
+      <ul>
+        <li><span class="icon">🔐</span> <strong>JWT Authentication</strong> — Stateless token-based login</li>
+        <li><span class="icon">🔒</span> <strong>bcrypt</strong> — Passwords hashed with 12 salt rounds</li>
+        <li><span class="icon">🛡️</span> <strong>Protected Routes</strong> — All APIs require valid token</li>
+        <li><span class="icon">🚪</span> <strong>Session Management</strong> — Auto-logout on token expiry</li>
+        <li><span class="icon">📱</span> <strong>Cookie + Header</strong> — Dual token delivery</li>
+      </ul>
+    </div>
+    <div class="card" style="text-align:center;display:flex;align-items:center;justify-content:center;">
+      <div>
+        <div style="font-size:3rem;">🔐</div>
+        <h3 style="color:#10b981;margin-top:1rem;">7-Day Token</h3>
+        <p>JWT tokens auto-expire after 7 days. All API routes are protected by auth middleware.</p>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">10 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 11: Deployment ==================== -->
+<div class="slide bg-gradient" id="slide11">
+  <h3>🚀 Deployment</h3>
+  <h2>Live on the <span class="gradient-text">Cloud</span></h2>
+  <div class="grid-3" style="margin-top:2rem;">
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">🌐</div>
+      <h3>Render</h3>
+      <p>Web service hosting with auto-deploy from GitHub</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">🗄️</div>
+      <h3>MongoDB Atlas</h3>
+      <p>Cloud database with 512MB free tier</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-icon">☁️</div>
+      <h3>Cloudinary</h3>
+      <p>Image CDN with auto-optimization</p>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2.5rem;">
+    <p style="font-size:1rem;">
+      <span class="badge badge-green">GitHub</span>
+      <span style="color:#6366f1;margin:0 8px;">→</span>
+      <span class="badge badge-purple">Render (Auto-Deploy)</span>
+      <span style="color:#6366f1;margin:0 8px;">→</span>
+      <span class="badge badge-orange">Live URL</span>
+    </p>
+    <p style="margin-top:1.5rem;font-size:1.1rem;color:#64748b;">
+      🔗 <strong style="color:#a5b4fc;">github.com/ashishpawar00/face-attendance-system</strong>
+    </p>
+  </div>
+  <span class="slide-number">11 / 12</span>
+  <span class="college-footer">Oriental College of Technology, Bhopal</span>
+</div>
+
+<!-- ==================== SLIDE 12: Thank You ==================== -->
+<div class="slide bg-accent" id="slide12">
+  <div style="text-align:center;">
+    <div style="font-size:4rem;margin-bottom:1.5rem;">🙏</div>
+    <h1>Thank You!</h1>
+    <p style="font-size:1.3rem;color:#e0e7ff;margin:1.5rem 0;">Questions & Demo</p>
+    <div style="margin-top:3rem;">
+      <p style="font-size:1rem;color:#c7d2fe;">Ashish Pawar</p>
+      <p style="font-size:0.9rem;color:#a5b4fc;margin-top:0.5rem;">Oriental College of Technology, Bhopal</p>
+      <p style="font-size:0.85rem;color:#818cf8;margin-top:0.5rem;">Department of Computer Science & Engineering</p>
+    </div>
+    <div style="margin-top:2.5rem;">
+      <p style="font-size:0.85rem;color:#818cf8;">
+        🔗 github.com/ashishpawar00/face-attendance-system
+      </p>
+    </div>
+  </div>
+  <span class="slide-number">12 / 12</span>
+</div>
+
+<!-- Navigation Hint -->
+<div class="nav-hint">← → Arrow keys or click to navigate slides</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+
+  function showSlide(n) {
+    slides.forEach(s => s.classList.remove('active'));
+    current = ((n % total) + total) % total;
+    slides[current].classList.add('active');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') showSlide(current + 1);
+    else if (e.key === 'ArrowLeft') showSlide(current - 1);
+    else if (e.key === 'f' || e.key === 'F11') {
+      e.preventDefault();
+      document.documentElement.requestFullscreen?.();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (e.clientX > window.innerWidth / 2) showSlide(current + 1);
+    else showSlide(current - 1);
+  });
+</script>
+</body>
+</html>

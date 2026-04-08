@@ -1,11 +1,18 @@
 const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key:    process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
+const isConfigured = !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
+
+if (isConfigured) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:    process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  });
+  console.log('☁️  Cloudinary configured');
+} else {
+  console.log('⚠️  Cloudinary NOT configured — photo uploads will be skipped');
+}
 
 /**
  * Upload a buffer or file stream directly to Cloudinary

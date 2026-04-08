@@ -72,11 +72,16 @@ router.post('/', upload.single('photo'), async (req, res) => {
     let photo_url = null;
     let photo_public_id = null;
 
-    // Upload photo to Cloudinary
+    // Upload photo to Cloudinary (optional — if it fails, registration still works)
     if (req.file) {
-      const result = await uploadToCloudinary(req.file.buffer);
-      photo_url = result.url;
-      photo_public_id = result.public_id;
+      try {
+        const result = await uploadToCloudinary(req.file.buffer);
+        photo_url = result.url;
+        photo_public_id = result.public_id;
+      } catch (uploadErr) {
+        console.warn('Photo upload skipped:', uploadErr.message);
+        // Registration continues without photo — face descriptor is what matters
+      }
     }
 
     const student = await Student.create({
